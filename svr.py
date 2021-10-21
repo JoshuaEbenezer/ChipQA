@@ -96,7 +96,7 @@ def apvd_train(split_no,apv_feats,apv_scores,apv_names):
     savemat(outname,out)
     srocc = results(preds,y_test)
     return srocc
-def apv_train(split_no):
+def apv_train(split_no,live_feats,live_scores):
     all_indices = np.arange(0,315)
     content_indices = np.arange(45)
     np.random.shuffle(content_indices)  # randomly shuffle content indices
@@ -207,11 +207,8 @@ def apv_train(split_no):
 
 
 if (dataset=='apv'):
-    apv_sts_kurt_feats = []
     live_sts_kurt_feats = []
     live_scores = []
-    apv_names = []
-    apv_scores = []
     outfolder = '../preds/preds_chipqa_by_distortion'+char
     if(os.path.isdir(outfolder)==False):
         os.mkdir(outfolder)
@@ -219,7 +216,7 @@ if (dataset=='apv'):
     for index,n in enumerate(names):
         last = n[-3]
         print(last)
-        if(last==char or last=='o'):
+        if(last=='p'):
             apv_sts_kurt_feats.append(sts_kurt_features[index])
             apv_scores.append(scores[index])
             apv_names.append(n)
@@ -227,7 +224,9 @@ if (dataset=='apv'):
         else:
             live_sts_kurt_feats.append(sts_kurt_features[index])
             live_scores.append(scores[index])
-    srocc_list = Parallel(n_jobs=-1,verbose=0)(delayed(apv_train)(i) for i in range(1000))
+    live_feats = np.asarray(live_sts_kurt_feats)
+    live_scores = np.asarray(live_scores)
+    srocc_list = Parallel(n_jobs=-1,verbose=0)(delayed(apv_train,live_feats,live_scores)(i) for i in range(1000))
     ##srocc_list = np.nan_to_num(srocc_list)
     print("median srocc is")
     print(np.median([s[0] for s in srocc_list]))
@@ -245,8 +244,6 @@ if (dataset=='apv'):
 elif(dataset=='apv_d'):
     for char in  ['j','c','i','f','d','a']:
         apv_sts_kurt_feats = []
-        live_sts_kurt_feats = []
-        live_scores = []
         apv_names = []
         apv_scores = []
         outfolder = '../preds/preds_chipqa_by_distortion'+char
@@ -260,11 +257,8 @@ elif(dataset=='apv_d'):
                 apv_sts_kurt_feats.append(sts_kurt_features[index])
                 apv_scores.append(scores[index])
                 apv_names.append(n)
-        live_feats=np.asarray(live_sts_kurt_feats)
         apv_feats =np.asarray(apv_sts_kurt_feats)
-        live_scores = np.asarray(live_scores)
         apv_scores = np.asarray(apv_scores)
-        print(live_feats.shape)
         print(apv_feats.shape)
         scores = np.squeeze(scores.astype(np.float32))
 
