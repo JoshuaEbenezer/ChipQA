@@ -14,8 +14,13 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn import svm
 from sklearn import preprocessing
 from joblib import dump, load
+from scipy.optimize import curve_fit
 from scipy.stats.mstats import gmean
 from scipy.stats import spearmanr,pearsonr
+import warnings
+warnings.filterwarnings("ignore",category=RuntimeWarning)
+warnings.filterwarnings("ignore",'.*Covariance*.')
+warnings.filterwarnings("ignore",'.*overflow encountered in exp*.')
 
 import random
 import argparse
@@ -45,8 +50,7 @@ names = sts_kurt_feats["name"]
 
 def results(all_preds,all_dmos):
     all_preds = np.asarray(all_preds)
-    print(np.max(all_preds),np.min(all_preds))
-    all_preds[np.isnan(all_preds)]=0
+    #all_preds[np.isnan(all_preds)]=0
     all_dmos = np.asarray(all_dmos)
 
     try:
@@ -54,17 +58,18 @@ def results(all_preds,all_dmos):
                                               all_preds, all_dmos, p0=0.5*np.ones((5,)), maxfev=20000)
         preds_fitted = b0 * (0.5 - 1.0/(1 + np.exp(b1*(all_preds - b2))) + b3 * all_preds+ b4)
     except:
+#        print(e)
         preds_fitted = all_preds
     preds_srocc = spearmanr(preds_fitted,all_dmos)
     preds_lcc = pearsonr(preds_fitted,all_dmos)
     preds_rmse = np.sqrt(np.mean((preds_fitted-all_dmos)**2))
-    print('SROCC:')
-    print(preds_srocc[0])
-    print('LCC:')
-    print(preds_lcc[0])
-    print('RMSE:')
-    print(preds_rmse)
-    print(len(all_preds),' videos were read')
+#    print('SROCC:')
+#    print(preds_srocc[0])
+#    print('LCC:')
+#    print(preds_lcc[0])
+#    print('RMSE:')
+#    print(preds_rmse)
+#    print(len(all_preds),' videos were read')
     return preds_srocc[0],preds_lcc[0],preds_rmse
 
 
@@ -252,7 +257,6 @@ elif(dataset=='apv_d'):
 
         for index,n in enumerate(names):
             last = n[-3]
-            print(last)
             if(last==char or last=='o'):
                 apv_sts_kurt_feats.append(sts_kurt_features[index])
                 apv_scores.append(scores[index])
@@ -264,18 +268,20 @@ elif(dataset=='apv_d'):
 
         srocc_list = Parallel(n_jobs=-1,verbose=0)(delayed(apvd_train)(i,apv_feats,apv_scores,apv_names) for i in range(1000))
 ##srocc_list = np.nan_to_num(srocc_list)
-        print("median srocc is")
-        print(np.median([s[0] for s in srocc_list]))
-        print("median lcc is")
-        print(np.median([s[1] for s in srocc_list]))
-        print("median rmse is")
-        print(np.median([s[2] for s in srocc_list]))
-        print("std of srocc is")
-        print(np.std([s[0] for s in srocc_list]))
-        print("std of lcc is")
-        print(np.std([s[1] for s in srocc_list]))
-        print("std of rmse is")
-        print(np.std([s[2] for s in srocc_list]))
+        with open('distortion_result.txt', 'a') as f:
+            print("median srocc is", file=f)
+            print(np.median([s[0] for s in srocc_list]), file=f)
+            print("median lcc is", file=f)
+            print(np.median([s[1] for s in srocc_list]), file=f)
+            print("median rmse is", file=f)
+            print(np.median([s[2] for s in srocc_list]), file=f)
+            print("std of srocc is", file=f)
+            print(np.std([s[0] for s in srocc_list]), file=f)
+            print("std of lcc is", file=f)
+            print(np.std([s[1] for s in srocc_list]), file=f)
+            print("std of rmse is", file=f)
+            print(np.std([s[2] for s in srocc_list]), file=f)
+            print('above is for distortion ',char, file=f)
     ##
 elif(dataset=="onlytrain"):
     only_train()
