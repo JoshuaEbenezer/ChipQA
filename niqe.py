@@ -47,7 +47,7 @@ def extract_on_patches(img, blocksizerow, blocksizecol):
 
     return patch_features
 
-def computequality(img, blocksizerow, blocksizecol, mu_prisparam, cov_prisparam):
+def computequality(img, blocksizerow, blocksizecol, mu_prisparam, cov_prisparam,C=1e-3):
     # img = img[:, :, 0]
     h, w = img.shape
 
@@ -72,10 +72,10 @@ def computequality(img, blocksizerow, blocksizecol, mu_prisparam, cov_prisparam)
 
     img2 = cv2.resize(img, (height,width), interpolation=cv2.INTER_CUBIC)
 
-    mscn1, var, mu = compute_image_mscn_transform(img, extend_mode='nearest')
+    mscn1, var, mu = compute_image_mscn_transform(img, C=C,extend_mode='nearest')
     mscn1 = mscn1.astype(np.float32)
 
-    mscn2, _, _ = compute_image_mscn_transform(img2, extend_mode='nearest')
+    mscn2, _, _ = compute_image_mscn_transform(img2,C=C, extend_mode='nearest')
     mscn2 = mscn2.astype(np.float32)
 
     feats_lvl1 = extract_on_patches(mscn1, blocksizerow, blocksizecol)
@@ -95,7 +95,7 @@ def computequality(img, blocksizerow, blocksizecol, mu_prisparam, cov_prisparam)
     return np.hstack((mu_distparam, [quality]))
 
 
-def compute_niqe_features(frames):
+def compute_niqe_features(frames,C=1e-3):
     blocksizerow = 96
     blocksizecol = 96
 
@@ -113,6 +113,6 @@ def compute_niqe_features(frames):
     #   niqe_features[idx] = computequality(frames[i], blocksizerow, blocksizecol, mu_prisparam, cov_prisparam)
     #   idx += 1
 
-    niqe_features = computequality(frames, blocksizerow, blocksizecol, mu_prisparam, cov_prisparam)
+    niqe_features = computequality(frames, blocksizerow, blocksizecol, mu_prisparam, cov_prisparam,C=1e-3)
     return niqe_features
 
