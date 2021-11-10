@@ -271,7 +271,7 @@ def sts_fromfilename(i,filenames,results_folder):
             Ydown_3d_mscn = spatiotemporal_mscn(down_img_buffer,avg_window)
             grad3d_mscn = spatiotemporal_mscn(grad_img_buffer,avg_window)
             graddown3d_mscn = spatiotemporal_mscn(graddown_img_buffer,avg_window)
-            spat_feats = niqe.compute_niqe_features(Y)
+            spat_feats = niqe.compute_niqe_features(Y,C=C)
 
             sd_feats = np.std(feat_sd_list,axis=0)
             sd_list.append(sd_feats)
