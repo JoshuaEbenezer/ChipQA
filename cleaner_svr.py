@@ -50,11 +50,6 @@ def results(all_preds,all_dmos):
 
 
 
-<<<<<<< HEAD
-scores_df = pd.read_csv('/home/josh/hdr/fall21_score_analysis/fall21_data.csv')
-video_names = scores_df['video']
-scores = scores_df['dark_mos']
-=======
 scores_df = pd.read_csv('/home/josh/hdr/qa/hdr_chipqa/ChipQA/apv_livestream_scores.csv')
 print(len(scores_df))
 scores_df =  scores_df[scores_df.distortion!='p']
@@ -91,30 +86,10 @@ def trainval_split(trainval_content,r):
 #        if("Jockey" in vid or "Football" in vid):
 #            continue
 #        else:
-<<<<<<< HEAD
-        featfile_name = vid+'_upscaled.z'
-        score = scores[i]
-        feat_file = load(os.path.join(feature_folder,featfile_name))
-        feat_file2 = load(os.path.join(feature_folder2,featfile_name))
-        feat_file3 = load(os.path.join(feature_folder3,featfile_name))
-            
-        feature1 = np.asarray(feat_file['features'],dtype=np.float32)
-        feature2 = np.asarray(feat_file2['features'],dtype=np.float32)
-        feature3 = np.asarray(feat_file3['features'],dtype=np.float32)
-#        feature = feature2
-        feature = np.concatenate((feature1,feature2,feature3),axis=0)
-=======
         featfile_name = vid[:-4]+'.z'
         score = scores[i]
         feat_file = load(os.path.join(feature_folder,featfile_name))
-        feat_file2 = load(os.path.join(feature_folder2,featfile_name))
-        feature1 = np.asarray(feat_file['features'],dtype=np.float32)
-        feature2 = np.asarray(feat_file2['features'],dtype=np.float32)
-#        feature = feature2
-        feature = np.concatenate((feature1,feature2),axis=0)
->>>>>>> bf51d54a820a4d37856bc9ad4940dbfcc8b6e444
-#        feature = np.concatenate((feature1[32:40],feature1[72:80],feature2[32:40],feature2[72:80]),axis=0)
-#        feature = np.concatenate((feat_file['features'],feat_file2['features']))
+        feature = np.asarray(feat_file['features'],dtype=np.float32)
         feature = np.nan_to_num(feature)
 #        if(np.isnan(feature).any()):
 #            print(vid)
