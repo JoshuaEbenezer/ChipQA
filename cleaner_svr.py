@@ -50,7 +50,7 @@ def results(all_preds,all_dmos):
 
 
 
-scores_df = pd.read_csv('/home/josh/hdr/qa/hdr_chipqa/ChipQA/apv_livestream_scores.csv')
+scores_df = pd.read_csv('/home/josh-admin/hdr/qa/hdr_chipqa/ChipQA/apv_livestream_scores.csv')
 print(len(scores_df))
 scores_df =  scores_df[scores_df.distortion!='p']
 scores_df.reset_index(drop=True, inplace=True)
@@ -60,7 +60,6 @@ scores = list(scores_df['MOS'])
 print(scores)
 scores_df['content'] = [f.split('_')[0] for f in scores_df['video']]
 print(scores_df['content'])
->>>>>>> bf51d54a820a4d37856bc9ad4940dbfcc8b6e444
 print(len(scores_df['content'].unique()))
 srocc_list = []
 
@@ -73,13 +72,7 @@ def trainval_split(trainval_content,r):
     val_scores = []
 #    feature_folder= "/home/ubuntu/bitstream_mode3_p1204_3/features/p1204_etri_features"
 
-<<<<<<< HEAD
-    feature_folder= './features/fall21_hdr_chipqa_global_logit_upscaled'
-    feature_folder2= './features/jzazbz_chipqa_chroma_features'
-=======
-    feature_folder= '../features/livestream_chipqa_with_logit'
-    feature_folder2= './chipqa_apv_features'
->>>>>>> bf51d54a820a4d37856bc9ad4940dbfcc8b6e444
+    feature_folder= './features/'
     train_names = []
     val_names = [] 
     for i,vid in enumerate(video_names):
