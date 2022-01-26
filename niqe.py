@@ -9,7 +9,7 @@ import scipy.ndimage
 import scipy.stats
 
 import cv2
-from .save_stats import aggd_features,paired_product,compute_image_mscn_transform
+from save_stats import aggd_features,paired_product,compute_image_mscn_transform
 
 
 def _extract_subband_feats(mscncoefs):
