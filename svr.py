@@ -44,43 +44,6 @@ chipqa_features = np.asarray(sts_kurt_feats['features'])
 #sigma_sd = chipqa_features[:,213:221]
 
 sts_kurt_features =  chipqa_features #np.concatenate((chroma_avg,grad_avg,sigma_avg,chroma_sd,grad_sd,sigma_sd,sts_kurt),axis=1)
-<<<<<<< HEAD
-print(sts_kurt_features.shape)
-scores = np.asarray(sts_kurt_feats["scores"],dtype=np.float32)
-print(scores)
-names = sts_kurt_feats["names"]
-
-
-count=0
-apv_sts_kurt_feats = []
-live_sts_kurt_feats = []
-live_scores = []
-apv_scores = []
-for index,n in enumerate(names):
-    last = n[-3]
-    if(last=='p'):
-        apv_sts_kurt_feats.append(sts_kurt_features[index])
-        apv_scores.append(scores[index])
-
-    else:
-        live_sts_kurt_feats.append(sts_kurt_features[index])
-        live_scores.append(scores[index])
-
-
-live_feats=np.asarray(live_sts_kurt_feats)
-apv_feats =np.asarray(apv_sts_kurt_feats)
-live_scores = np.asarray(live_scores)
-apv_scores = np.asarray(apv_scores)
-print(live_feats.shape)
-print(apv_feats.shape)
-scores = np.squeeze(scores.astype(np.float32))
-srocc_t = []
-
-
-
-
-count=0
-=======
 scores = np.asarray(sts_kurt_feats["score"],dtype=np.float32)
 names = sts_kurt_feats["name"]
 
@@ -111,7 +74,6 @@ def results(all_preds,all_dmos):
 
 
 count=0
->>>>>>> bf51d54a820a4d37856bc9ad4940dbfcc8b6e444
 def only_train():
     X_train = np.concatenate((apv_feats,live_feats),0)
     y_train = np.concatenate((apv_scores,live_scores),0)
@@ -236,16 +198,9 @@ def apv_train(split_no,live_feats,live_scores,live_names):
     clf_best.fit(X_train,y_train)
     preds = clf_best.predict(X_test)
     predfname = 'preds_'+str(split_no)+'.mat'
-<<<<<<< HEAD
-    out = {'pred':preds,'y':y_test}
-    srocc_test = spearmanr(preds,y_test)
-    print(srocc_test[0])
-    return srocc_test[0]
-=======
     #out = {'pred':preds,'y':y_test,'names':
     srocc,lcc,rmse = results(preds,y_test)
     return [srocc,lcc,rmse,test_names]
->>>>>>> bf51d54a820a4d37856bc9ad4940dbfcc8b6e444
 
 
 
