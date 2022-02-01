@@ -86,8 +86,8 @@ def trainval_split(trainval_content,r):
         feat_file2 = load(os.path.join(feature_folder2,featfile_name))
         feature1 = np.asarray(feat_file['features'],dtype=np.float32)
         feature2 = np.asarray(feat_file2['features'],dtype=np.float32)
-#        feature = feature2
-        feature = np.concatenate((feature1,feature2),axis=0)
+        feature = feature1
+#        feature = np.concatenate((feature1,feature2),axis=0)
 #        feature = np.concatenate((feature1[32:40],feature1[72:80],feature2[32:40],feature2[72:80]),axis=0)
 #        feature = np.concatenate((feat_file['features'],feat_file2['features']))
         feature = np.nan_to_num(feature)

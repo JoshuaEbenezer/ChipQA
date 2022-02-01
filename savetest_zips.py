@@ -223,7 +223,7 @@ if (dataset=='apv'):
     live_scores = np.asarray(live_scores)
     srocc_list = Parallel(n_jobs=-1,verbose=0)(delayed(apv_train)(i,live_feats,live_scores,live_names) for i in range(1000))
     ##srocc_list = np.nan_to_num(srocc_list)
-    with open('results/scratch_overall_result.txt', 'a') as f:
+    with open('results/hdrchipqa_overall_result.txt', 'a') as f:
         print("median srocc is", file=f)
         print(np.median([s[0] for s in srocc_list]), file=f)
         print("median lcc is", file=f)
@@ -237,7 +237,7 @@ if (dataset=='apv'):
         print("std of rmse is", file=f)
         print(np.std([s[2] for s in srocc_list]), file=f)
     srcc_csv = pd.DataFrame(srocc_list,columns=['srcc','lcc','rmse','names'])
-    srcc_csv.to_csv('results/scratch_srcc_lcc_rmse_list.csv')
+    srcc_csv.to_csv('results/chipqa_srcc_lcc_rmse_list.csv')
 elif(dataset=='apv_d'):
     sts_kurt_features= [np.average(x,axis=0) for x in sts_kurt_features]
     for char in  ['j','c','i','f','d','a']:
