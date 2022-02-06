@@ -352,7 +352,7 @@ def sts_fromvid(args):
     outfolder = args.results_folder
     if(os.path.exists(outfolder)==False):
         os.mkdir(outfolder)
-    Parallel(n_jobs=10)(delayed(sts_fromfilename)\
+    Parallel(n_jobs=30)(delayed(sts_fromfilename)\
             (i,files,outfolder)\
             for i in range(len(files)))
 #    for i in range(len(files)):
