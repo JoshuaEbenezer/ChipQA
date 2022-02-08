@@ -140,7 +140,10 @@ def sts_fromfilename(i,filenames,results_folder):
         return
     name = os.path.basename(filename)
     print(name) 
-    filename_out =os.path.join(results_folder,os.path.splitext(name)[0]+'.z')
+    fname = os.path.splitext(name)[0]
+    content = fname.split('_')[0]
+    filename_out =os.path.join(results_folder,content,fname+'.z')
+    print(filename_out)
     if(os.path.exists(filename_out)):
         return
     ## PARAMETERS for the model
@@ -346,13 +349,23 @@ def sts_fromfilename(i,filenames,results_folder):
     return
 
 
+def flatten(t):
+        return [item for sublist in t for item in sublist]
 def sts_fromvid(args):
-    files = glob.glob(os.path.join(args.input_folder,'*.yuv'))
-    
+    print(os.listdir(args.input_folder))
+    folders = os.listdir(args.input_folder) 
+    print(folders)
+
+    files = []
+    for folder in folders:
+        files.append(glob.glob(os.path.join(args.input_folder,folder,'*.yuv')))
+    files = flatten(files)
+    print(files)
+        
     outfolder = args.results_folder
     if(os.path.exists(outfolder)==False):
         os.mkdir(outfolder)
-    Parallel(n_jobs=10)(delayed(sts_fromfilename)\
+    Parallel(n_jobs=40)(delayed(sts_fromfilename)\
             (i,files,outfolder)\
             for i in range(len(files)))
 #    for i in range(len(files)):
