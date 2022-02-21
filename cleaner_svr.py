@@ -50,7 +50,7 @@ def results(all_preds,all_dmos):
 
 
 
-scores_df = pd.read_csv('/home/josh/hdr/qa/hdr_chipqa/ChipQA/apv_livestream_scores.csv')
+scores_df = pd.read_csv('/home/josh-admin/hdr/qa/hdr_chipqa/ChipQA/apv_livestream_scores.csv')
 print(len(scores_df))
 scores_df =  scores_df[scores_df.distortion!='p']
 scores_df.reset_index(drop=True, inplace=True)
@@ -72,8 +72,7 @@ def trainval_split(trainval_content,r):
     val_scores = []
 #    feature_folder= "/home/ubuntu/bitstream_mode3_p1204_3/features/p1204_etri_features"
 
-    feature_folder= '../features/livestream_chipqa_with_logit'
-    feature_folder2= './chipqa_apv_features'
+    feature_folder= './features/'
     train_names = []
     val_names = [] 
     for i,vid in enumerate(video_names):
@@ -83,6 +82,7 @@ def trainval_split(trainval_content,r):
         featfile_name = vid[:-4]+'.z'
         score = scores[i]
         feat_file = load(os.path.join(feature_folder,featfile_name))
+<<<<<<< HEAD
         feat_file2 = load(os.path.join(feature_folder2,featfile_name))
         feature1 = np.asarray(feat_file['features'],dtype=np.float32)
         feature2 = np.asarray(feat_file2['features'],dtype=np.float32)
@@ -90,6 +90,9 @@ def trainval_split(trainval_content,r):
 #        feature = np.concatenate((feature1,feature2),axis=0)
 #        feature = np.concatenate((feature1[32:40],feature1[72:80],feature2[32:40],feature2[72:80]),axis=0)
 #        feature = np.concatenate((feat_file['features'],feat_file2['features']))
+=======
+        feature = np.asarray(feat_file['features'],dtype=np.float32)
+>>>>>>> ebf16c0aa25c883f91d8286af648e53f28cc9e52
         feature = np.nan_to_num(feature)
 #        if(np.isnan(feature).any()):
 #            print(vid)
