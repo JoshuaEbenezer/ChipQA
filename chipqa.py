@@ -105,6 +105,19 @@ def find_kurtosis_sts(img_buffer,grad_img_buffer,step,cy,cx,rst,rct,theta):
     return st_data,np.asarray(st_deviation),st_grad_data,np.asarray(st_grad_dev)
 
 
+def unblockshaped(arr, h, w):
+    """
+    Return an array of shape (h, w) where
+    h * w = arr.size
+
+    If arr is of shape (n, nrows, ncols), n sublocks of shape (nrows, ncols),
+    then the returned array preserves the "physical" layout of the sublocks.
+    """
+    n, nrows, ncols = arr.shape
+    return (arr.reshape(h//nrows, -1, nrows, ncols)
+               .swapaxes(1,2)
+               .reshape(h, w))
+
 
 def sts_fromfilename(i,filenames,results_folder):
     filename = filenames[i]
@@ -279,11 +292,12 @@ def sts_fromfilename(i,filenames,results_folder):
 
             sts,st_deviation,sts_grad,sts_grad_deviation = find_kurtosis_sts(Y3d_mscn,grad3d_mscn,step,cy,cx,rst,rct,theta)
             dsts,dsts_deviation,dsts_grad,dsts_grad_deviation = find_kurtosis_sts(Ydown_3d_mscn,graddown3d_mscn,step,dcy,dcx,rst,rct,theta)
-            sts_arr = np.reshape(sts,(r1*st_time_length,r2*st_time_length)) 
-            sts_grad = np.reshape(sts_grad,(r1*st_time_length,r2*st_time_length))
-            print()
-            dsts_arr = np.reshape(dsts,(dr1*st_time_length,dr2*st_time_length)) #(int((int(dsize[0]/20)*20-step*4)/4),int((int(dsize[1]/20)*20-step*4)/4)))
-            dsts_grad = np.reshape(dsts_grad,(dr1*st_time_length,dr2*st_time_length))#(int((int(dsize[0]/20)*20-step*4)/4),int((int(dsize[1]/20)*20-step*4)/4)))
+            sts_arr = unblockshaped(np.reshape(sts,(-1,st_time_length,st_time_length)),r1*st_time_length,r2*st_time_length)
+            sts_grad= unblockshaped(np.reshape(sts_grad,(-1,st_time_length,st_time_length)),r1*st_time_length,r2*st_time_length)
+
+            dsts_arr = unblockshaped(np.reshape(dsts,(-1,st_time_length,st_time_length)),dr1*st_time_length,dr2*st_time_length)
+            dsts_grad= unblockshaped(np.reshape(dsts_grad,(-1,st_time_length,st_time_length)),dr1*st_time_length,dr2*st_time_length)
+
             feats =  save_stats.brisque(sts_arr)
             grad_feats = save_stats.brisque(sts_grad)
             
