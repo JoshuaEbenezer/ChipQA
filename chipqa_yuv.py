@@ -286,7 +286,6 @@ def sts_fromfilename(i,filenames,results_folder):
 
 
             allst_feats = np.concatenate((spat_feats,feats,dfeats,grad_feats,dgrad_feats),axis=0)
-            print(allst_feats.shape)
             X_list.append(allst_feats)
 
 
@@ -315,8 +314,8 @@ def sts_fromvid(args):
     print(filenames)
     flag = 0
     os.makedirs(args.results_folder,exist_ok=True)
-    Parallel(n_jobs=15)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
-#    sts_fromfilename(1,filenames,args.results_folder)
+#    Parallel(n_jobs=15)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
+    sts_fromfilename(1,filenames,args.results_folder)
              
 
 

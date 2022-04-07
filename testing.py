@@ -14,19 +14,6 @@ sts_kurt_feats = load(args.input_feature_file)
 
 
 sts_kurt_features = np.reshape(sts_kurt_feats['features'],(1,-1))
-print(sts_kurt_features.shape)
-#sts_kurt = chipqa_features[:,:109]
-#chroma_avg = chipqa_features[:,109:125]
-#grad_avg = chipqa_features[:,125:157]
-#sigma_avg = chipqa_features[:,157:165]
-#
-#chroma_sd = chipqa_features[:,165:181]
-#grad_sd = chipqa_features[:,181:213]
-#sigma_sd = chipqa_features[:,213:221]
-#
-#sts_kurt_features = np.concatenate((chroma_avg,grad_avg,sigma_avg,chroma_sd,grad_sd,sigma_sd,sts_kurt),axis=1)
-#print(sts_kurt_features.shape)
-
 grid_svr = load("LIVE_Livestream_trained_svr.z")
 scaler =load("LIVE_Livestream_fitted_scaler.z") 
 X_train = scaler.transform(sts_kurt_features)
