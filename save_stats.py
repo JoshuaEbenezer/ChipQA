@@ -192,7 +192,7 @@ def gen_gauss_window(lw, sigma):
         weights[ii] /= sum
     return weights
 
-def compute_image_mscn_transform(image, C=1e-3, avg_window=None, extend_mode='constant'):
+def compute_image_mscn_transform(image, C=1, avg_window=None, extend_mode='constant'):
     if avg_window is None:
       avg_window = gen_gauss_window(3, 7.0/6.0)
     assert len(np.shape(image)) == 2

@@ -14,7 +14,6 @@ import niqe
 import save_stats
 from numba import jit,prange
 import argparse
-from pypapi import events, papi_high as high
 
 parser = argparse.ArgumentParser(description='Generate ChipQA features from a folder of videos and store them')
 parser.add_argument('input_folder',help='Folder containing input videos')
@@ -87,7 +86,7 @@ def find_kurtosis_slice(Y3d_mscn,cy,cx,rst,rct,theta,h,step):
     idx = (np.abs(st_kurtosis - 3)).argmin()
     
     data_slice = data[idx,:]
-    return data_slice,st_kurtosis[idx]-3
+    return data_slice
 
 
 def find_kurtosis_sts(img_buffer,grad_img_buffer,step,cy,cx,rst,rct,theta):
@@ -98,11 +97,7 @@ def find_kurtosis_sts(img_buffer,grad_img_buffer,step,cy,cx,rst,rct,theta):
     sts= [find_kurtosis_slice(Y3d_mscn,cy[i],cx[i],rst,rct,theta,h,step) for i in range(len(cy))]
     sts_grad= [find_kurtosis_slice(gradY3d_mscn,cy[i],cx[i],rst,rct,theta,h,step) for i in range(len(cy))]
 
-    st_data = [sts[i][0] for i in range(len(sts))]
-    st_deviation = [sts[i][1] for i in range(len(sts))]
-    st_grad_data = [sts_grad[i][0] for i in range(len(sts_grad))]
-    st_grad_dev = [sts_grad[i][1] for i in range(len(sts_grad))]
-    return st_data,np.asarray(st_deviation),st_grad_data,np.asarray(st_grad_dev)
+    return sts,sts_grad
 
 
 def unblockshaped(arr, h, w):
@@ -201,7 +196,6 @@ def sts_fromfilename(i,filenames,results_folder):
     dr1 = len(np.arange(step,dsize[0]-step*4,step*4)) 
     dr2 = len(np.arange(step,dsize[1]-step*4,step*4)) 
     
-    head, tail = os.path.split(filename)
 
     
 
@@ -290,8 +284,8 @@ def sts_fromfilename(i,filenames,results_folder):
             sd_list.append(sd_feats)
             feat_sd_list = []
 
-            sts,st_deviation,sts_grad,sts_grad_deviation = find_kurtosis_sts(Y3d_mscn,grad3d_mscn,step,cy,cx,rst,rct,theta)
-            dsts,dsts_deviation,dsts_grad,dsts_grad_deviation = find_kurtosis_sts(Ydown_3d_mscn,graddown3d_mscn,step,dcy,dcx,rst,rct,theta)
+            sts,sts_grad, = find_kurtosis_sts(Y3d_mscn,grad3d_mscn,step,cy,cx,rst,rct,theta)
+            dsts,dsts_grad= find_kurtosis_sts(Ydown_3d_mscn,graddown3d_mscn,step,dcy,dcx,rst,rct,theta)
             sts_arr = unblockshaped(np.reshape(sts,(-1,st_time_length,st_time_length)),r1*st_time_length,r2*st_time_length)
             sts_grad= unblockshaped(np.reshape(sts_grad,(-1,st_time_length,st_time_length)),r1*st_time_length,r2*st_time_length)
 
@@ -329,12 +323,13 @@ def sts_fromfilename(i,filenames,results_folder):
 
 
 def sts_fromvid(args):
-    filenames = glob.glob(os.path.join(args.input_folder,'*.mp4'))
+    filenames = glob.glob(os.path.join(args.input_folder,'*.yuv'))
     print(sorted(filenames))
     filenames = sorted(filenames)
+    print(filenames)
     flag = 0
-    Parallel(n_jobs=-5)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
-#    sts_fromfilename(34,filenames,args.results_folder)
+#    Parallel(n_jobs=-5)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
+    sts_fromfilename(34,filenames,args.results_folder)
              
 
 
