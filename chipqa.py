@@ -328,8 +328,7 @@ def sts_fromvid(args):
     filenames = sorted(filenames)
     print(filenames)
     flag = 0
-#    Parallel(n_jobs=-5)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
-    sts_fromfilename(34,filenames,args.results_folder)
+    Parallel(n_jobs=-5)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
              
 
 
