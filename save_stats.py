@@ -2,19 +2,14 @@ import numpy as np
 import cv2
 import glob
 import os
-import skvideo.io
 from scipy.special import gamma
-from matplotlib import pyplot as plt 
 import skvideo.utils
 import pandas as pd
 import math
 from joblib import dump
 import scipy
 from joblib import load
-from scipy.fftpack import fft, dct
-import scipy.io as sio
 from scipy.stats import norm,lognorm,skew,kurtosis
-from skvideo.measure import videobliinds,videobliinds_features,niqe
 from skimage.util.shape import view_as_windows
 
 

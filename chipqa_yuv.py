@@ -1,6 +1,5 @@
 import time
 from yuv_utils import yuv_read
-from joblib import Parallel,delayed
 import numpy as np
 import cv2
 import queue
@@ -10,7 +9,6 @@ import time
 import scipy.ndimage
 import joblib
 import sys
-import matplotlib.pyplot as plt
 import niqe 
 import save_stats
 from numba import jit,prange
@@ -25,7 +23,6 @@ parser.add_argument('--bit_depth', type=int,choices={8,10,12})
 parser.add_argument('--color_space',choices={'BT2020','BT709'})
 
 args = parser.parse_args()
-C=1
 def gen_gauss_window(lw, sigma):
     sd = np.float32(sigma)
     lw = int(lw)
@@ -170,10 +167,10 @@ def sts_fromfilename(filename,filename_out,height,width,bit_depth,color_space):
     gradient_mag_down = np.sqrt(gradient_x_down**2+gradient_y_down**2)    
     i = 0
 
-    Y_mscn,_,_ = save_stats.compute_image_mscn_transform(prevY)
-    dY_mscn,_,_ = save_stats.compute_image_mscn_transform(prevY_down)
-    gradY_mscn,_,_ = save_stats.compute_image_mscn_transform(gradient_mag)
-    dgradY_mscn,_,_ = save_stats.compute_image_mscn_transform(gradient_mag_down)
+    Y_mscn,_,_ = save_stats.compute_image_mscn_transform(prevY,C)
+    dY_mscn,_,_ = save_stats.compute_image_mscn_transform(prevY_down,C)
+    gradY_mscn,_,_ = save_stats.compute_image_mscn_transform(gradient_mag,C)
+    dgradY_mscn,_,_ = save_stats.compute_image_mscn_transform(gradient_mag_down,C)
 
     img_buffer[i,:,:] = Y_mscn
     down_img_buffer[i,:,:]= dY_mscn
@@ -199,15 +196,17 @@ def sts_fromfilename(filename,filename_out,height,width,bit_depth,color_space):
 
         
         Y,U,V = yuv_read(filename,framenum,height,width,bit_depth)
-        yvu = np.dstack((Y,V,U))
         
         
         if(color_space=='BT709'):
+            yvu = np.dstack((Y,V,U))
             bgr = cv2.cvtColor(yvu,cv2.COLOR_YCrCb2BGR)
             lab = cv2.cvtColor(bgr, cv2.COLOR_BGR2LAB)
             lab = lab.astype(np.float32)
         elif(color_space=='BT2020'):
-            frame = colour.YCbCr_to_RGB(yvu/1023.0,K = [0.2627,0.0593])
+
+            yuv = np.dstack((Y,U,V))
+            frame = colour.YCbCr_to_RGB(yuv/1023.0,K = [0.2627,0.0593])
             xyz = colour.RGB_to_XYZ(frame, [0.3127,0.3290], [0.3127,0.3290],\
                     colour.models.RGB_COLOURSPACE_BT2020.RGB_to_XYZ_matrix,\
                     chromatic_adaptation_transform='CAT02',\
@@ -313,7 +312,7 @@ def sts_fromvid(args):
     filenames = sorted(filenames)
     flag = 0
     os.makedirs(args.results_folder,exist_ok=True)
-    Parallel(n_jobs=15)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
+#    Parallel(n_jobs=15)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
              
 
 
@@ -323,7 +322,8 @@ def sts_fromvid(args):
 
 def main():
     args = parser.parse_args()
-    sts_fromfilename(args.input_file,args.results_file,args.height,args.width,args.bit_depth,args.color_space)
+    print(args)
+#    sts_fromfilename(args.input_file,args.results_file,args.height,args.width,args.bit_depth,args.color_space)
 
 if __name__ == '__main__':
     # print(__doc__)

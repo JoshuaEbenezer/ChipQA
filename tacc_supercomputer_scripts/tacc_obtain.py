@@ -30,6 +30,6 @@ for i in range(rank, len(files), size):
     name = os.path.basename(vname)
     os.makedirs(results_folder,exist_ok=True)
     results_file = os.path.join(results_folder,os.path.splitext(os.path.basename(vname))[0]+'.z')
-    cmd = "python3 chipqa_yuv.py --input_file {vname} --results_file {results_file} --bit_depth 10 --color_space BT2020 --width 3840 --height 2160".format(vname=vname,results_file=results_file)
+    cmd = "python3 ../chipqa_yuv.py --input_file {vname} --results_file {results_file} --bit_depth 10 --color_space BT2020 --width 3840 --height 2160".format(vname=vname,results_file=results_file)
     print(cmd)
     os.system(cmd)

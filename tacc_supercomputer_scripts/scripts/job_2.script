@@ -4,7 +4,7 @@
 #SBATCH -o eval2.log
 #SBATCH -J eval2
 #SBATCH -p normal
-#SBATCH -t 02:15:00
+#SBATCH -t 05:15:00
 #SBATCH --mail-user=joshuaebenezer@utexas.edu
 #SBATCH --mail-type=all
 source env/bin/activate
@@ -13,5 +13,5 @@ conda activate hdr_chipqa
 
 module load python3
 
-ibrun -n 10  python3 tacc_obtain.py --input_folder /scratch/08176/jebeneze/spring22/third_quarter  --results_folder /work/08176/jebeneze/ls6/code/production_hdr_chipqa/spring22_features/  
+ibrun -n 10  python3 tacc_obtain.py --input_folder /scratch/08176/jebeneze/spring22/third_quarter  --results_folder /work/08176/jebeneze/ls6/code/ChipQA/spring22_features/  
             
