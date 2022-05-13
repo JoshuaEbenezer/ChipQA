@@ -94,8 +94,8 @@ def find_kurtosis_sts(img_buffer,grad_img_buffer,step,cy,cx,rst,rct,theta):
     h, w = img_buffer[step-1].shape[:2]
     Y3d_mscn = np.reshape(img_buffer.copy(),(step,-1))
     gradY3d_mscn = np.reshape(grad_img_buffer.copy(),(step,-1))
-    sts= [find_kurtosis_slice(Y3d_mscn,cy[i],cx[i],rst,rct,theta,h,step) for i in range(len(cy))]
-    sts_grad= [find_kurtosis_slice(gradY3d_mscn,cy[i],cx[i],rst,rct,theta,h,step) for i in range(len(cy))]
+    sts= [find_kurtosis_slice(Y3d_mscn,cy[i],cx[i],rst,rct,theta,w,step) for i in range(len(cy))]
+    sts_grad= [find_kurtosis_slice(gradY3d_mscn,cy[i],cx[i],rst,rct,theta,w,step) for i in range(len(cy))]
 
     return sts,sts_grad
 
