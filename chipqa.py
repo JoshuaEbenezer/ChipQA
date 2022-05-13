@@ -15,13 +15,9 @@ import save_stats
 from numba import jit,prange
 import argparse
 
-parser = argparse.ArgumentParser(description='Generate ChipQA features from a folder of videos and store them')
-parser.add_argument('--input_file',help='Input video file')
+parser = argparse.ArgumentParser(description='Generate ChipQA features from an 8 bit mp4/avi video and store them')
+parser.add_argument('--input_file',help='Input video file (has to be 8 bit mp4 or avi)')
 parser.add_argument('--results_file',help='File where features are stored')
-parser.add_argument('--width', type=int)
-parser.add_argument('--height', type=int)
-parser.add_argument('--bit_depth', type=int,choices={8,10,12})
-parser.add_argument('--color_space',choices={'BT2020','BT709'})
 
 args = parser.parse_args()
 C=1
@@ -325,7 +321,7 @@ def sts_fromfilename(filename,filename_out):
 
 def main():
     args = parser.parse_args()
-    sts_fromfilename(args.input_file,args.results_file,args.height,args.width,args.color_space)
+    sts_fromfilename(args.input_file,args.results_file)
 
 
 if __name__ == '__main__':
