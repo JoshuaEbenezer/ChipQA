@@ -16,8 +16,12 @@ from numba import jit,prange
 import argparse
 
 parser = argparse.ArgumentParser(description='Generate ChipQA features from a folder of videos and store them')
-parser.add_argument('input_folder',help='Folder containing input videos')
-parser.add_argument('results_folder',help='Folder where features are stored')
+parser.add_argument('--input_file',help='Input video file')
+parser.add_argument('--results_file',help='File where features are stored')
+parser.add_argument('--width', type=int)
+parser.add_argument('--height', type=int)
+parser.add_argument('--bit_depth', type=int,choices={8,10,12})
+parser.add_argument('--color_space',choices={'BT2020','BT709'})
 
 args = parser.parse_args()
 C=1
@@ -114,11 +118,7 @@ def unblockshaped(arr, h, w):
                .reshape(h, w))
 
 
-def sts_fromfilename(i,filenames,results_folder):
-    filename = filenames[i]
-    name = os.path.basename(filename)
-    print(name) 
-    filename_out =os.path.join(results_folder,os.path.splitext(name)[0]+'.z')
+def sts_fromfilename(filename,filename_out):
     st_time_length = 5
     t = np.arange(0,st_time_length)
     a=0.5
@@ -317,28 +317,15 @@ def sts_fromfilename(i,filenames,results_folder):
     X3 = np.average(X_list,axis=0)
     X = np.concatenate((X1,X2,X3),axis=0)
     train_dict = {"features":X}
-    filename_out =os.path.join(os.path.splitext(name)[0]+'.z')
-    joblib.dump(train_dict,os.path.join(results_folder,filename_out))
+    joblib.dump(train_dict,filename_out)
     return
 
 
-def sts_fromvid(args):
-    filenames = glob.glob(os.path.join(args.input_folder,'*.yuv'))
-    print(sorted(filenames))
-    filenames = sorted(filenames)
-    print(filenames)
-    flag = 0
-    Parallel(n_jobs=-5)(delayed(sts_fromfilename)(i,filenames,args.results_folder) for i in range(len(filenames)))
-             
-
-
-
-    return
 
 
 def main():
     args = parser.parse_args()
-    sts_fromvid(args)
+    sts_fromfilename(args.input_file,args.results_file,args.height,args.width,args.color_space)
 
 
 if __name__ == '__main__':

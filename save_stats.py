@@ -214,27 +214,28 @@ def generate_aggd(x1,x2,alpha,sigma_l,sigma_r):
     f2 = alpha/((beta_l+beta_r)*gamma(1/alpha))*np.exp(-(x2/beta_r)**alpha)
     f = np.concatenate((f1,f2),axis=0)
     return f
-def chroma_feats(lab):
+def chroma_feats(lab,C):
     # lab = cv2.cvtColor(bgr,cv2.COLOR_BGR2Lab)
     a = lab[:,:,1]
     b = lab[:,:,2]
 
 
     chroma = np.sqrt(a**2+b**2)
-    chroma_mscn,sigma_map,_ = compute_image_mscn_transform(chroma)
-    sigma_mscn,_,_ =compute_image_mscn_transform(sigma_map)
+    chroma_mscn,sigma_map,_ = compute_image_mscn_transform(chroma,C)
+    sigma_mscn,_,_ =compute_image_mscn_transform(sigma_map,C)
 
     alpha,sigma,skewness,kurt= stat_feats(chroma_mscn)
     salpha,ssigma,sskewness,skurt= stat_feats(sigma_mscn)
 
     
-    half_scale = cv2.resize(chroma.astype(np.uint8), dsize=(0,0),fx=0.5,fy=0.5, interpolation=cv2.INTER_CUBIC)
-    half_chroma_mscn,half_sigma_map,_ = compute_image_mscn_transform(half_scale)
-    half_sigma_mscn,_,_ = compute_image_mscn_transform(half_sigma_map)
+    half_scale = cv2.resize(chroma, dsize=(0,0),fx=0.5,fy=0.5, interpolation=cv2.INTER_CUBIC)
+    half_chroma_mscn,half_sigma_map,_ = compute_image_mscn_transform(half_scale,C)
+    half_sigma_mscn,_,_ = compute_image_mscn_transform(half_sigma_map,C)
 
     halpha,hsigma,hskewness,hkurt= stat_feats(half_chroma_mscn)
     hsalpha,hssigma,hsskewness,hskurt= stat_feats(half_sigma_mscn)
-    first_order_feats = np.asarray([alpha,sigma,skewness,kurt,halpha,hsigma,hskewness,hkurt,salpha,ssigma,sskewness,skurt,hsalpha,hssigma,hsskewness,hskurt]) 
+    first_order_feats = np.asarray([alpha,sigma,skewness,kurt,halpha,hsigma,\
+    hskewness,hkurt,salpha,ssigma,sskewness,skurt,hsalpha,hssigma,hsskewness,hskurt]) 
     return first_order_feats 
 def estimate_log_deri_ggd(image):
     log_im = np.log(image+0.5)
