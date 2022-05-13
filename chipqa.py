@@ -121,7 +121,7 @@ def sts_fromfilename(i,filenames,results_folder):
     filename_out =os.path.join(results_folder,os.path.splitext(name)[0]+'.z')
     st_time_length = 5
     t = np.arange(0,st_time_length)
-    a=0.25
+    a=0.5
     avg_window = t*(1-a*t)*np.exp(-2*a*t)
     avg_window = np.flip(avg_window)
     cap = cv2.VideoCapture(filename)
