@@ -1,4 +1,6 @@
 from yuv_utils import yuv_read
+import colour
+import colour_utils
 import numpy as np
 import cv2
 import glob
@@ -202,12 +204,12 @@ def sts_fromfilename(filename,filename_out,height,width,bit_depth,color_space):
         elif(color_space=='BT2020'):
 
             yuv = np.dstack((Y,U,V))
-            frame = colour.YCbCr_to_RGB(yuv/1023.0,K = [0.2627,0.0593])
-            xyz = colour.RGB_to_XYZ(frame, [0.3127,0.3290], [0.3127,0.3290],\
-                    colour.models.RGB_COLOURSPACE_BT2020.RGB_to_XYZ_matrix,\
+            frame = colour_utils.YCbCr_to_RGB(yuv/1023.0,K = [0.2627,0.0593])
+            xyz = colour_utils.RGB_to_XYZ(frame, [0.3127,0.3290], [0.3127,0.3290],\
+                    colour_utils.BT2020_RGB_to_XYZ_matrix,\
                     chromatic_adaptation_transform='CAT02',\
-                    cctf_decoding=colour.models.eotf_PQ_BT2100)
-            lab = colour.XYZ_to_hdr_CIELab(xyz, illuminant=[ 0.3127, 0.329 ], Y_s=0.2, Y_abs=100, method='Fairchild 2011')
+                    cctf_decoding=colour_utils.eotf_PQ_BT2100)/10000
+            lab = colour_utils.XYZ_to_hdr_CIELab(xyz, illuminant=[ 0.3127, 0.329 ], Y_s=0.2, Y_abs=100, method='Fairchild 2011')
 
         chroma_feats = save_stats.chroma_feats(lab,C=color_C)
 
@@ -296,8 +298,7 @@ def sts_fromfilename(filename,filename_out,height,width,bit_depth,color_space):
     X3 = np.average(X_list,axis=0)
     X = np.concatenate((X1,X2,X3),axis=0)
     train_dict = {"features":X}
-    filename_out =os.path.join(os.path.splitext(name)[0]+'.z')
-    joblib.dump(train_dict,os.path.join(results_folder,filename_out))
+    joblib.dump(train_dict,filename_out)
     return
 
 

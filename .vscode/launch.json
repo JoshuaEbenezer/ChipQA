@@ -4,6 +4,17 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+        {
+            "name": "ChipQA",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["--input_file","/media/lab-admin/nebula_livelab2/josh/HDR_2022_SPRING_yuv_updated/MRSM-301_res1080_mu5400_sigma300_rate5519_aqOn.yuv",
+            "--results_file","./test.z","--bit_depth","10","--height","2160","--width","3840","--color_space","BT2020"]
+        },
         {
             "name": "Python: Current File",
             "type": "python",
