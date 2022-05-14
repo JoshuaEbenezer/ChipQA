@@ -1,14 +1,10 @@
-import time
 from yuv_utils import yuv_read
 import numpy as np
 import cv2
-import queue
 import glob
 import os
-import time
 import scipy.ndimage
 import joblib
-import sys
 import niqe 
 import save_stats
 from numba import jit,prange
@@ -323,7 +319,7 @@ def sts_fromvid(args):
 def main():
     args = parser.parse_args()
     print(args)
-#    sts_fromfilename(args.input_file,args.results_file,args.height,args.width,args.bit_depth,args.color_space)
+    sts_fromfilename(args.input_file,args.results_file,args.height,args.width,args.bit_depth,args.color_space)
 
 if __name__ == '__main__':
     # print(__doc__)

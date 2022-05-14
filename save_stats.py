@@ -4,13 +4,11 @@ import glob
 import os
 from scipy.special import gamma
 import skvideo.utils
-import pandas as pd
 import math
 from joblib import dump
 import scipy
 from joblib import load
 from scipy.stats import norm,lognorm,skew,kurtosis
-from skimage.util.shape import view_as_windows
 
 
 
