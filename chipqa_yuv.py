@@ -1,5 +1,4 @@
 from yuv_utils import yuv_read
-import colour
 import colour_utils
 import numpy as np
 import cv2
