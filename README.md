@@ -2,6 +2,11 @@
 
 This repository contains code for ChipQA and ChipQA-0.
 
+Please cite ChipQA if you use this work:
+J. P. Ebenezer, Z. Shang, Y. Wu, H. Wei, S. Sethuraman and A. C. Bovik, "ChipQA: No-Reference Video Quality Prediction via Space-Time Chips," in IEEE Transactions on Image Processing, vol. 30, pp. 8059-8074, 2021, doi: 10.1109/TIP.2021.3112055.
+
+The IEEE link is https://ieeexplore.ieee.org/document/9540785 and you can find a free preprint here: https://arxiv.org/abs/2109.08726.
+
 ## Requirements
 
 See requirements.txt
