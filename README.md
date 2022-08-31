@@ -1,3 +1,9 @@
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/chipqa-no-reference-video-quality-prediction/video-quality-assessment-on-live-etri)](https://paperswithcode.com/sota/video-quality-assessment-on-live-etri?p=chipqa-no-reference-video-quality-prediction)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/chipqa-no-reference-video-quality-prediction/video-quality-assessment-on-live-livestream)](https://paperswithcode.com/sota/video-quality-assessment-on-live-livestream?p=chipqa-no-reference-video-quality-prediction)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/chipqa-no-reference-video-quality-prediction/video-quality-assessment-on-youtube-ugc)](https://paperswithcode.com/sota/video-quality-assessment-on-youtube-ugc?p=chipqa-no-reference-video-quality-prediction)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/chipqa-no-reference-video-quality-prediction/video-quality-assessment-on-konvid-1k)](https://paperswithcode.com/sota/video-quality-assessment-on-konvid-1k?p=chipqa-no-reference-video-quality-prediction)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/chipqa-no-reference-video-quality-prediction/video-quality-assessment-on-live-vqc)](https://paperswithcode.com/sota/video-quality-assessment-on-live-vqc?p=chipqa-no-reference-video-quality-prediction)
+
 # CHIPQA: No-Reference Video Quality Assessment using Space-Time Chips
 
 This repository contains code for ChipQA and ChipQA-0.
