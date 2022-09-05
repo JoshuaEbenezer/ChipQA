@@ -56,7 +56,7 @@ def find_sts_locs(sts_slope,cy,cx,step,height,width):
 
 
 @jit(nopython=True)
-def find_kurtosis_slice(Y3d_mscn,cy,cx,rst,rct,theta,height,step):
+def find_kurtosis_slice(Y3d_mscn,cy,cx,rst,rct,theta,width,step):
     st_kurtosis = np.zeros((len(theta),))
     data = np.zeros((len(theta),step**2))
     for index,t in enumerate(theta):
@@ -64,7 +64,7 @@ def find_kurtosis_slice(Y3d_mscn,cy,cx,rst,rct,theta,height,step):
         rcos_theta  =rct[:,index]
         x_sts,y_sts = cx+rcos_theta,cy+rsin_theta
         
-        data[index,:] =Y3d_mscn[:,y_sts*height+x_sts].flatten() 
+        data[index,:] =Y3d_mscn[:,y_sts*width+x_sts].flatten() 
         data_mu4 = np.mean((data[index,:]-np.mean(data[index,:]))**4)
         data_var = np.var(data[index,:])
         st_kurtosis[index] = data_mu4/(data_var**2+1e-4)
