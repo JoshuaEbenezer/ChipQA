@@ -17,7 +17,6 @@ sts_kurt_features = np.reshape(sts_kurt_feats['features'],(1,-1))
 grid_svr = load("chipqa_livestream_svr.z")
 scaler =load("chipqa_livestream_minmaxscaler.z") 
 X_train = scaler.transform(sts_kurt_features)
-print(X_train)
 score = grid_svr.predict(X_train)
-print(score)
+print(score, ' is the predicted score')
 
