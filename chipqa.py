@@ -63,7 +63,6 @@ def find_sts_locs(sts_slope,cy,cx,step,h,w):
         y = (cy-(x_sts-cx)*sts_slope).astype(np.int64)
         y_sts = np.asarray([y[j] if y[j]<h else h-1 for j in range(step)])
     else:
-        #        print(np.abs(sts_slope))
         y_sts = np.arange(cy-int((step-1)/2),cy+int((step-1)/2)+1)
         x= ((-y_sts+cy)/sts_slope+cx).astype(np.int64)
         x_sts = np.asarray([x[j] if x[j]<w else w-1 for j in range(step)]) 
@@ -123,12 +122,11 @@ def sts_fromfilename(filename,filename_out):
     cap = cv2.VideoCapture(filename)
     count=1
     ret, prev = cap.read()
-    print(ret)
+
                     #percent by which the image is resized
     scale_percent = 0.5
 #
     theta = np.arange(0,np.pi,np.pi/6)
-    print(len(theta))
     ct = np.cos(theta)
     st = np.sin(theta)
     lower_r = int((st_time_length+1)/2)-1
@@ -143,7 +141,6 @@ def sts_fromfilename(filename,filename_out):
     prevY = cv2.cvtColor(prev, cv2.COLOR_BGR2GRAY)
     prevY = prevY.astype(np.float32)
     h,w = prev.shape[0],prev.shape[1]
-    print(h,w)
     if(h>w):
         h_temp = h
         h=w
@@ -151,7 +148,6 @@ def sts_fromfilename(filename,filename_out):
 
     # dsize
     dsize = (int(scale_percent*h),int(scale_percent*w))
-    print(h,w,dsize)
 
     step = st_time_length
     cy, cx = np.mgrid[step:h-step*4:step*4, step:w-step*4:step*4].reshape(2,-1).astype(int) # these will be the centers of each block
@@ -215,13 +211,12 @@ def sts_fromfilename(filename,filename_out):
         
         ret,bgr = cap.read()
         count=count+1
-        print(count)
         if(ret==False):
             count=count-1
             break
         lab = cv2.cvtColor(bgr, cv2.COLOR_BGR2LAB)
         lab = lab.astype(np.float32)
-        chroma_feats = save_stats.chroma_feats(lab)
+        chroma_feats = save_stats.chroma_feats(lab,C=1)
 
         Y = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
         Y = Y.astype(np.float32)
@@ -296,7 +291,6 @@ def sts_fromfilename(filename,filename_out):
 
 
             allst_feats = np.concatenate((spat_feats,feats,dfeats,grad_feats,dgrad_feats),axis=0)
-            print(allst_feats.shape)
             X_list.append(allst_feats)
 
 
@@ -305,8 +299,6 @@ def sts_fromfilename(filename,filename_out):
             down_img_buffer =np.zeros((st_time_length,prevY_down.shape[0],prevY_down.shape[1]))
             graddown_img_buffer =np.zeros((st_time_length,prevY_down.shape[0],prevY_down.shape[1]))
             i=0
-#            x=high.stop_counters()
-#        print(x,"is the number of flops")
 
     X1 = np.average(spatavg_list,axis=0)
     X2 = np.average(sd_list,axis=0)

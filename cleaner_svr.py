@@ -78,13 +78,18 @@ def trainval_split(trainval_content,r):
     val_scores = []
 
     feature_folder= args.feature_folder
+    feature_folder2 = './livestream_patch_maxstdpercentile/20_20/'
     train_names = []
     val_names = [] 
     for i,vid in enumerate(video_names):
         featfile_name = vid[:-4]+'.z'
         score = scores[i]
         feat_file = load(os.path.join(feature_folder,featfile_name))
-        feature = np.asarray(feat_file['features'],dtype=np.float32)
+        feature1 = np.asarray(feat_file['features'],dtype=np.float32)
+        feat_file = load(os.path.join(feature_folder2,featfile_name))
+        feature2 = np.asarray(feat_file['features'],dtype=np.float32)
+#        feature = np.concatenate((feature1,feature2),0)
+        feature = feature1
         feature = np.nan_to_num(feature)
         if(scores_df.loc[i]['content'] in train):
             train_features.append(feature)

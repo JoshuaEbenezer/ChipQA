@@ -1,4 +1,5 @@
 from yuv_utils import yuv_read
+import time 
 import colour_utils
 import numpy as np
 import cv2
@@ -101,7 +102,6 @@ def unblockshaped(arr, height, width):
 
 def sts_fromfilename(filename,filename_out,height,width,bit_depth,color_space):
     name = os.path.basename(filename)
-    print(name) 
     st_time_length = 5
     t = np.arange(0,st_time_length)
     a=0.5
@@ -139,7 +139,6 @@ def sts_fromfilename(filename,filename_out,height,width,bit_depth,color_space):
 
     # dsize
     dsize = (int(scale_percent*height),int(scale_percent*width))
-    print(height,width,dsize)
 
     step = st_time_length
     cy, cx = np.mgrid[step:height-step*4:step*4, step:width-step*4:step*4].reshape(2,-1).astype(int) # these will be the centers of each block
@@ -210,6 +209,7 @@ def sts_fromfilename(filename,filename_out,height,width,bit_depth,color_space):
                     cctf_decoding=colour_utils.eotf_PQ_BT2100)/10000
             lab = colour_utils.XYZ_to_hdr_CIELab(xyz, illuminant=[ 0.3127, 0.329 ], Y_s=0.2, Y_abs=100, method='Fairchild 2011')
 
+        start = time.time()
         chroma_feats = save_stats.chroma_feats(lab,C=color_C)
 
         Y_down = cv2.resize(Y,(dsize[1],dsize[0]),interpolation=cv2.INTER_CUBIC)
@@ -289,6 +289,9 @@ def sts_fromfilename(filename,filename_out,height,width,bit_depth,color_space):
             down_img_buffer =np.zeros((st_time_length,prevY_down.shape[0],prevY_down.shape[1]))
             graddown_img_buffer =np.zeros((st_time_length,prevY_down.shape[0],prevY_down.shape[1]))
             i=0
+        end = time.time()
+        compute_time = end-start 
+        print(compute_time)
 #            x=high.stop_counters()
 #        print(x,"is the number of flops")
 
