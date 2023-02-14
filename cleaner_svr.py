@@ -23,7 +23,7 @@ from scipy.optimize import curve_fit
 import argparse
 
 parser = argparse.ArgumentParser(description='Generate ChipQA features from a folder of videos and store them')
-parser.add_argument('--score_file',help='File with video names and scores')
+parser.add_argument('--score_file',help='File with video names and scores and content. Must have video, MOS, and content columns.')
 parser.add_argument('--feature_folder',help='Folder containing features')
 parser.add_argument('--only_train',action='store_true',help='only train')
 parser.add_argument('--only_test',action='store_true',help='only test')
@@ -57,16 +57,9 @@ def results(all_preds,all_dmos):
 
 
 scores_df = pd.read_csv(args.score_file)
-print(len(scores_df))
-scores_df =  scores_df[scores_df.distortion!='p']
-scores_df.reset_index(drop=True, inplace=True)
-print(len(scores_df))
 video_names = scores_df['video']
 scores = list(scores_df['MOS'])
-print(scores)
-scores_df['content'] = [f.split('_')[0] for f in scores_df['video']]
 print(scores_df['content'])
-print(len(scores_df['content'].unique()))
 srocc_list = []
 
 def trainval_split(trainval_content,r):
@@ -78,7 +71,6 @@ def trainval_split(trainval_content,r):
     val_scores = []
 
     feature_folder= args.feature_folder
-    feature_folder2 = './livestream_patch_maxstdpercentile/20_20/'
     train_names = []
     val_names = [] 
     for i,vid in enumerate(video_names):
@@ -86,9 +78,6 @@ def trainval_split(trainval_content,r):
         score = scores[i]
         feat_file = load(os.path.join(feature_folder,featfile_name))
         feature1 = np.asarray(feat_file['features'],dtype=np.float32)
-        feat_file = load(os.path.join(feature_folder2,featfile_name))
-        feature2 = np.asarray(feat_file['features'],dtype=np.float32)
-#        feature = np.concatenate((feature1,feature2),0)
         feature = feature1
         feature = np.nan_to_num(feature)
         if(scores_df.loc[i]['content'] in train):
@@ -101,10 +90,6 @@ def trainval_split(trainval_content,r):
             val_features.append(feature)
             val_scores.append(score)
             val_names.append(scores_df.loc[i]['video'])
-#    print('Train set')
-#    print(len(train_names))
-#    print('Validation set')
-#    print(len(val_names))
     return np.asarray(train_features),train_scores,np.asarray(val_features),val_scores,train
 
 def single_split(trainval_content,cv_index,gamma,C):
